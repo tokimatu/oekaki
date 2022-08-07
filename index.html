@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>お絵かきしてみる？</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+
+        body {
+            padding: 15px 0;
+        }
+
+        #canvas {
+            border: 5px solid #ddd;
+            margin-top:15px;
+        }
+
+        #button {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+        }
+
+        .color-box {
+            width: 25px;
+            height: 25px;
+            border:1px solid #ccc;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app" class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <button class="color-box" style="background:#f00"></button>
+                    <button class="color-box" style="background:#00f"></button>
+                    <button class="color-box" style="background:#ff0"></button>
+                    <button class="color-box" style="background:#0ff"></button>
+                    <button class="color-box" style="background:#0f0"></button>
+                    <button class="color-box" style="background:#000"></button>
+                    <button class="color-box" style="background:#fff"></button>
+                    &nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <canvas id="canvas" width="460" height="300"></canvas>
+        </div>
+    </div>
+    <!-- <button id="button" class="btn btn-lg btn-dark" type="button">保存する</button> -->
+</div>
+<script>
+
+    let color = 'rgb(0, 0, 0)'; // 初期値は黒
+    let drawing = false;
+
+    window.onload = function() {
+
+        var boxes = document.querySelectorAll('.color-box');
+
+        for(let i = 0; i < boxes.length; i++) {
+            var box = boxes[i];
+            box.addEventListener('click', function(e) {
+
+                color = e.target.style.backgroundColor; // 選択された色
+
+            })
+        }
+        
+
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        canvas.addEventListener('mousedown', function() {
+
+            drawing = true;
+
+        });
+
+        canvas.addEventListener('mouseup', function() {
+
+            drawing = false;
+
+        });
+
+        canvas.addEventListener('mousemove', function(e) {
+
+            if(drawing) {
+
+                // マウスの場所を計算
+                var rect = e.target.getBoundingClientRect();
+                var drawingX = e.clientX - rect.left;
+                var drawingY = e.clientY - rect.top;
+
+                // キャンバス色付け
+                ctx.beginPath();
+                ctx.fillStyle = color
+                ctx.arc(drawingX, drawingY, 5, 0, Math.PI*2);
+                ctx.fill();
+
+            }
+        });
+
+    };
+
+</script>
+</body>
+</html>
